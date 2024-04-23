@@ -28,8 +28,8 @@ jobs:
 
       - name: Update package
         run: | 
-              apt update && \
-              apt install \
+              sudo apt update && \
+              sudo apt install \
               pcre \
               pcre-dev \
               build-base \
