@@ -16,7 +16,7 @@ on:
       - main
 
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,9 +32,9 @@ jobs:
         working-directory: ${{ env.SRC_DIR }}
         run: npm install
 
-      - name: Test
+      - name: Test (simulate a failure)
         working-directory: ${{ env.SRC_DIR }}
-        run: npm test
+        run: FAIL_TEST=true npm test
 
       - name: Lint
         working-directory: ${{ env.SRC_DIR }}
