@@ -30,6 +30,7 @@ jobs:
         run: | 
               sudo apt update && \
               sudo apt install \
+              && python -m flake8 \
               && pip3 install pipenv
 
       - name: Install dependencies
