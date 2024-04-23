@@ -26,6 +26,19 @@ jobs:
         with:
           python-version: "3.9"
 
+      - name: Update package
+        run: | 
+              apt update && \
+              apt install \
+              pcre \
+              pcre-dev \
+              build-base \
+              gcc \
+              linux-headers \
+              openssl \
+              libffi-dev \
+              && pip3 install pipenv
+
       - name: Install dependencies
         working-directory: ${{ env.SRC_DIR }}
         run: pipenv install
