@@ -3,6 +3,7 @@ name: Build and deploy backend
 env:
   APP_NAME: Udacity Backend
   IMAGE_TAG: udacity-4st-project-be:v1
+  SRC_DIR: src/backend
 
 on:
   push:
@@ -13,8 +14,34 @@ on:
       - main
 
 jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Setup python3
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        working-directory: ${{ env.SRC_DIR }}
+        run: pipenv install
+
+      - name: Test (simulate a failure)
+        working-directory: ${{ env.SRC_DIR }}
+        run: pipenv run test
+
+      - name: Lint
+        working-directory: ${{ env.SRC_DIR }}
+        run: pipenv run lint
+
   build:
     runs-on: ubuntu-latest
+    needs: tests
+    if: ${{ failure() == false }}
 
     steps:
       - name: Check out repository
@@ -25,4 +52,4 @@ jobs:
 
       - name: Build backend image
         run: |
-          docker buildx build --platform linux/amd64 --tag $IMAGE_TAG ./src/backend
+          docker buildx build --platform linux/amd64 --tag ${{ env.IMAGE_TAG }} ./${{ env.SRC_DIR }}
