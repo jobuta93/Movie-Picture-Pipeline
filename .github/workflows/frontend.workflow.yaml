@@ -29,15 +29,15 @@ jobs:
           node-version: "18"
 
       - name: Install dependencies
-        working-directory: ${SRC_DIR}
+        working-directory: ${{ env.SRC_DIR }}
         run: npm install
 
       - name: Test
-        working-directory: ${SRC_DIR}
+        working-directory: ${{ env.SRC_DIR }}
         run: npm test
 
       - name: Lint
-        working-directory: ${SRC_DIR}
+        working-directory: ${{ env.SRC_DIR }}
         run: npm run lint
 
   build:
@@ -54,4 +54,4 @@ jobs:
 
       - name: Build frontend image
         run: |
-          docker buildx build --build-arg=REACT_APP_MOVIE_API_URL=${REACT_APP_MOVIE_API_URL} --platform linux/amd64 --tag $IMAGE_TAG ./src/frontend
+          docker buildx build --build-arg=REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} --platform linux/amd64 --tag ${{ env.IMAGE_TAG }} ./src/frontend
