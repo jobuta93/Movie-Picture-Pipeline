@@ -30,13 +30,6 @@ jobs:
         run: | 
               sudo apt update && \
               sudo apt install \
-              pcre \
-              pcre-dev \
-              build-base \
-              gcc \
-              linux-headers \
-              openssl \
-              libffi-dev \
               && pip3 install pipenv
 
       - name: Install dependencies
