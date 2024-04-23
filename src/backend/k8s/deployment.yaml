@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: uda-be
   labels:
-    app: backend
+    app: uda-be
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: uda-be
   template:
     metadata:
       labels:
-        app: backend
+        app: uda-be
     spec:
       containers:
-        - name: backend
-          image: backend
+        - name: uda-be
+          image: uda-be
           ports:
             - containerPort: 5000

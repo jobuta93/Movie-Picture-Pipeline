@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  be:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    image: udacity-4st-project-be
+    container_name: uda-be
+    ports:
+      - 5001:5000
+    networks:
+      udacity:
+        ipv4_address: 10.0.10.10
+
+  fe:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    image: udacity-4st-project-fe
+    container_name: uda-fe
+    ports:
+      - 3000:3000
+    networks:
+      udacity:
+        ipv4_address: 10.0.10.11
+    environment:
+      - REACT_APP_MOVIE_API_URL=http://10.0.10.10:5001
+
+  
+networks:
+  udacity:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.10.0/24

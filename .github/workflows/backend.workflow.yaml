@@ -1,0 +1,20 @@
+name: Build and deploy backend
+
+env:
+  APP_NAME: Udacity Backend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Print a message
+        run: echo "Hello, world! ${APP_NAME}"

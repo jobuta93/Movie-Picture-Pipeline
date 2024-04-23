@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: uda-fe
   labels:
-    app: frontend
+    app: uda-fe
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: uda-fe
   template:
     metadata:
       labels:
-        app: frontend
+        app: uda-fe
     spec:
       containers:
-        - name: frontend
-          image: frontend
+        - name: uda-fe
+          image: uda-fe
           ports:
             - containerPort: 3000
