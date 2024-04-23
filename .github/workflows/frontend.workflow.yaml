@@ -29,15 +29,15 @@ jobs:
           node-version: "18"
 
       - name: Install dependencies
-        working-directory: $SRC_DIR
+        working-directory: ${SRC_DIR}
         run: npm install
 
       - name: Test
-        working-directory: $SRC_DIR
+        working-directory: ${SRC_DIR}
         run: npm test
 
       - name: Lint
-        working-directory: $SRC_DIR
+        working-directory: ${SRC_DIR}
         run: npm run lint
 
   build:
