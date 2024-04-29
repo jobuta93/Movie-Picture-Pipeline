@@ -93,10 +93,6 @@ jobs:
           version: "latest"
           install-missing-components: true
 
-      # - name: Set up Kustomize
-      #   uses: k14s/setup-k14s@v3
-      #   with:
-      #     kustomize-version: "latest"
 
       - name: Install AWS CLI
         run: |
@@ -120,4 +116,4 @@ jobs:
           export DEPLOYMENT_FILE=$SRC_DIR/k8s/deployment.yaml
           sed -i -e s#IMAGE_TAG#${{ env.IMAGE_TAG }}#g $DEPLOYMENT_FILE
           cat $DEPLOYMENT_FILE
-          cd $SRC_DIR/k8s && kubectl apply -k kustomization.yaml
+          cd $SRC_DIR/k8s && kubectl apply -k .

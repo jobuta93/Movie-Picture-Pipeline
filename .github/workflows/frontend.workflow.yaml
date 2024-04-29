@@ -7,6 +7,7 @@ env:
   SRC_DIR: src/frontend
   DOCKER_URL: 267769458268.dkr.ecr.us-east-1.amazonaws.com
   AWS_REGION: us-east-1
+  EKS_CLUSTER: cluster
 
 on:
   workflow_dispatch:
@@ -75,3 +76,42 @@ jobs:
           docker buildx build --build-arg=REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} \
            --platform linux/amd64 \
            --tag ${{ env.IMAGE_TAG }} --push ./${{ env.SRC_DIR }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ failure() == false }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "latest"
+          install-missing-components: true
+
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Configure AWS credentials
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }}
+          aws configure set default.region $AWS_REGION
+
+      - name: Configure kubectl
+        run: |
+          mkdir -p ~/.kube
+          aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER
+
+      - name: deploy backend
+        run: |
+          export DEPLOYMENT_FILE=$SRC_DIR/k8s/deployment.yaml
+          sed -i -e s#IMAGE_TAG#${{ env.IMAGE_TAG }}#g $DEPLOYMENT_FILE
+          cat $DEPLOYMENT_FILE
+          cd $SRC_DIR/k8s && kubectl apply -k .
