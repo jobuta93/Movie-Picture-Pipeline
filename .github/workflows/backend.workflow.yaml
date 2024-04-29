@@ -93,10 +93,10 @@ jobs:
           version: "latest"
           install-missing-components: true
 
-      - name: Set up Kustomize
-        uses: k14s/setup-k14s@v3
-        with:
-          kustomize-version: "latest"
+      # - name: Set up Kustomize
+      #   uses: k14s/setup-k14s@v3
+      #   with:
+      #     kustomize-version: "latest"
 
       - name: Install AWS CLI
         run: |
