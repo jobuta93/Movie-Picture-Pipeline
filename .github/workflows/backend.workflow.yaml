@@ -2,7 +2,7 @@ name: Build and deploy backend
 
 env:
   APP_NAME: Udacity Backend
-  IMAGE_TAG: 267769458268.dkr.ecr.us-east-1.amazonaws.com/backend
+  IMAGE_TAG: 267769458268.dkr.ecr.us-east-1.amazonaws.com/backend:v1
   SRC_DIR: src/backend
   DOCKER_URL: 267769458268.dkr.ecr.us-east-1.amazonaws.com
   AWS_REGION: us-east-1
