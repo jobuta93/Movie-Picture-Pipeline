@@ -2,7 +2,7 @@ name: Backend CD
 
 env:
   APP_NAME: Udacity Backend
-  IMAGE_TAG: 267769458268.dkr.ecr.us-east-1.amazonaws.com/backend:v1
+  IMAGE_TAG: 267769458268.dkr.ecr.us-east-1.amazonaws.com/backend:${GITHUB_SHA::7}
   SRC_DIR: src/backend
   DOCKER_URL: 267769458268.dkr.ecr.us-east-1.amazonaws.com
   AWS_REGION: us-east-1
@@ -17,7 +17,7 @@ on:
       - main
 
 jobs:
-  tests:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,22 +40,65 @@ jobs:
         working-directory: ${{ env.SRC_DIR }}
         run: pipenv install
 
-      - name: Test (simulate a failure)
-        working-directory: ${{ env.SRC_DIR }}
-        run: pipenv run test
-
       - name: Lint
         working-directory: ${{ env.SRC_DIR }}
         run: pipenv run lint
 
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Setup python3
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Update package
+        run: |
+          sudo apt update && \
+          sudo apt install \
+          && python -m pip install flake8 \
+          && pip3 install pipenv
+
+      - name: Install dependencies
+        working-directory: ${{ env.SRC_DIR }}
+        run: pipenv install
+
+      - name: Test
+        working-directory: ${{ env.SRC_DIR }}
+        run: pipenv run test
+
   build:
     runs-on: ubuntu-latest
-    needs: tests
+    needs:
+      - lint
+      - test
     if: ${{ failure() == false }}
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
+      - name: Setup python3
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+      - name: Update package
+        run: |
+          sudo apt update && \
+          sudo apt install \
+          && python -m pip install flake8 \
+          && pip3 install pipenv
+
+      - name: Install dependencies
+        working-directory: ${{ env.SRC_DIR }}
+        run: pipenv install
+
+      - name: Test
+        working-directory: ${{ env.SRC_DIR }}
+        run: pipenv run test
 
       - name: Install AWS CLI
         run: |
@@ -92,7 +135,6 @@ jobs:
         with:
           version: "latest"
           install-missing-components: true
-
 
       - name: Install AWS CLI
         run: |
