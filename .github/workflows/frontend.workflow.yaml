@@ -109,7 +109,7 @@ jobs:
           mkdir -p ~/.kube
           aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER
 
-      - name: deploy backend
+      - name: deploy frontend
         run: |
           export DEPLOYMENT_FILE=$SRC_DIR/k8s/deployment.yaml
           sed -i -e s#IMAGE_TAG#${{ env.IMAGE_TAG }}#g $DEPLOYMENT_FILE
