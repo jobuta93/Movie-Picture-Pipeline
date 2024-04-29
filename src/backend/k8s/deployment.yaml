@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: uda-be
-          image: uda-be
+          image: IMAGE_TAG
           ports:
             - containerPort: 5000
