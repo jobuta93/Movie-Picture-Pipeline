@@ -151,6 +151,8 @@ Now that the cluster and all AWS resources have been created, you'll need to add
 
 1. Run the `init.sh` helper script in the `setup` folder
 
+# setup kubeconfig file
+aws eks update-kubeconfig --region region-code --name my-cluster
 ```bash
 cd setup
 ./init.sh

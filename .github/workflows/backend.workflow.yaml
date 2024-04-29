@@ -2,8 +2,10 @@ name: Build and deploy backend
 
 env:
   APP_NAME: Udacity Backend
-  IMAGE_TAG: udacity-4st-project-be:v1
+  IMAGE_TAG: 267769458268.dkr.ecr.us-east-1.amazonaws.com/backend
   SRC_DIR: src/backend
+  DOCKER_URL: 267769458268.dkr.ecr.us-east-1.amazonaws.com
+  AWS_REGION: us-east-1
 
 on:
   push:
@@ -27,11 +29,11 @@ jobs:
           python-version: "3.9"
 
       - name: Update package
-        run: | 
-              sudo apt update && \
-              sudo apt install \
-              && python -m pip install flake8 \
-              && pip3 install pipenv
+        run: |
+          sudo apt update && \
+          sudo apt install \
+          && python -m pip install flake8 \
+          && pip3 install pipenv
 
       - name: Install dependencies
         working-directory: ${{ env.SRC_DIR }}
@@ -60,3 +62,10 @@ jobs:
       - name: Build backend image
         run: |
           docker buildx build --platform linux/amd64 --tag ${{ env.IMAGE_TAG }} ./${{ env.SRC_DIR }}
+
+      - name: Log in to Docker Hub
+        run: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $DOCKER_URL
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.IMAGE_TAG }}

@@ -2,7 +2,7 @@ name: Build and deploy frontend
 
 env:
   APP_NAME: Udacity Frontend
-  IMAGE_TAG: udacity-4st-project-fe:v1
+  IMAGE_TAG: 267769458268.dkr.ecr.us-east-1.amazonaws.com/frontend
   REACT_APP_MOVIE_API_URL: http://uda-be-service
   SRC_DIR: src/frontend
 
