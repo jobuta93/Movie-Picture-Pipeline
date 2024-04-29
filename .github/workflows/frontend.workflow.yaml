@@ -2,9 +2,11 @@ name: Build and deploy frontend
 
 env:
   APP_NAME: Udacity Frontend
-  IMAGE_TAG: 267769458268.dkr.ecr.us-east-1.amazonaws.com/frontend
+  IMAGE_TAG: 267769458268.dkr.ecr.us-east-1.amazonaws.com/frontend:v1
   REACT_APP_MOVIE_API_URL: http://uda-be-service
   SRC_DIR: src/frontend
+  DOCKER_URL: 267769458268.dkr.ecr.us-east-1.amazonaws.com
+  AWS_REGION: us-east-1
 
 on:
   workflow_dispatch:
@@ -49,6 +51,22 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Configure AWS credentials
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }}
+          aws configure set default.region $AWS_REGION
+
+
+      - name: Log in to Docker Hub
+        run: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $DOCKER_URL
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -56,4 +74,4 @@ jobs:
         run: |
           docker buildx build --build-arg=REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} \
            --platform linux/amd64 \
-           --tag ${{ env.IMAGE_TAG }} ./${{ env.SRC_DIR }}
+           --tag ${{ env.IMAGE_TAG }} --push ./${{ env.SRC_DIR }}
