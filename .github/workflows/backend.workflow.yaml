@@ -120,4 +120,4 @@ jobs:
           export DEPLOYMENT_FILE=$SRC_DIR/k8s/deployment.yaml
           sed -i -e s#IMAGE_TAG#${{ env.IMAGE_TAG }}#g $DEPLOYMENT_FILE
           cat $DEPLOYMENT_FILE
-          kubectl apply -k $SRC_DIR/k8s/kustomization.yaml
+          cd $SRC_DIR/k8s && kubectl apply -k kustomization.yaml
