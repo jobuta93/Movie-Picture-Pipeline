@@ -1,4 +1,4 @@
-name: Frontend CI
+name: Frontend CD
 
 env:
   APP_NAME: Udacity Frontend
