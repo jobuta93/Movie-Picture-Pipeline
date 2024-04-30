@@ -140,7 +140,6 @@ jobs:
 
       - name: deploy frontend
         run: |
-          export DEPLOYMENT_FILE=$SRC_DIR/k8s/deployment.yaml
-          sed -i -e s#IMAGE_TAG#${{ env.IMAGE_TAG }}#g $DEPLOYMENT_FILE
-          cat $DEPLOYMENT_FILE
-          cd $SRC_DIR/k8s && kubectl apply -k .
+          cd $SRC_DIR/k8s
+          kustomize edit set image uda-fe=$IMAGE_TAG
+          kustomize build | kubectl apply -f -
