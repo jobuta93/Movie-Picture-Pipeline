@@ -156,5 +156,5 @@ jobs:
       - name: deploy backend
         run: |
           cd $SRC_DIR/k8s
-          kustomize edit set image IMAGE_TAG=${IMAGE_TAG}
+          kustomize edit set image IMAGE_TAG=${{ env.IMAGE_TAG }}
           kustomize build | kubectl apply -f -
